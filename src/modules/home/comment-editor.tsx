@@ -103,7 +103,7 @@ const CommentEditor = ({
     >
       <DialogBackdrop className="fixed inset-0 bg-black/70" />
       <DialogPanel className="w-full max-w-xl z-50 rounded-lg bg-white p-6 shadow-lg flex flex-col gap-3">
-        <DialogTitle className="flex justify-center font-bold text-2xl">
+        <DialogTitle className="flex justify-center font-bold text-xl sm:text-2xl">
           What's your favorate memory?
         </DialogTitle>
         {/* Title */}
@@ -131,7 +131,7 @@ const CommentEditor = ({
         </Field>
         {/* Image Preview */}
         <div className="flex justify-center items-center">
-          <div className="w-full max-h-[400px] border-2 border-dashed border-gray-300 rounded-lg overflow-y-auto bg-gray-50">
+          <div className="w-full max-h-60 sm:max-h-100 border-2 border-dashed border-gray-300 rounded-lg overflow-y-auto bg-gray-50">
             {imagePreview && imageDimensions ? (
               <div className="w-full">
                 <Image
