@@ -1,0 +1,202 @@
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+  Button,
+} from "@headlessui/react";
+
+interface PaginationProps {
+  totalPages: number;
+  total: number;
+}
+
+const Pagination = ({ totalPages, total }: PaginationProps) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const page = searchParams.get("page") || "1";
+  const limit = searchParams.get("limit") || "3";
+
+  const currentPage = parseInt(page, 10);
+  const limitNum = parseInt(limit, 10);
+
+  const startItem = (currentPage - 1) * limitNum + 1;
+  const endItem = Math.min(currentPage * limitNum, total);
+
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage === totalPages;
+  const isOnlyOnePage = totalPages === 1;
+
+  const handleLimitChange = (newLimit: string) => {
+    router.push(`/?page=1&limit=${newLimit}`);
+  };
+
+  // Generate page numbers (with ellipsis)
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 4) {
+        pages.push(1, 2, 3, 4, 5, "...", totalPages);
+      } else if (currentPage > totalPages - 4) {
+        pages.push(
+          1,
+          "...",
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
+      }
+    }
+
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
+
+  return (
+    <div className="w-full flex justify-between items-center gap-6 mt-8 mb-5">
+      {/* Pagination buttons */}
+      <div className="flex items-center gap-2">
+        {/* Previous */}
+        <Button
+          type="button"
+          disabled={isFirstPage || isOnlyOnePage}
+          onClick={() =>
+            router.push(`/?page=${currentPage - 1}&limit=${limit}`)
+          }
+          className={`
+            min-w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
+            font-medium transition-all duration-300
+            ${
+              isFirstPage || isOnlyOnePage
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-white text-rose-700 hover:bg-rose-200 hover:text-rose-800 hover:shadow-md border-2 border-rose-200"
+            }
+          `}
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </Button>
+
+        {/* Page numbers */}
+        {pageNumbers.map((pageNum, i) =>
+          pageNum === "..." ? (
+            <span
+              key={`ellipsis-${i}`}
+              className="min-w-10 h-10 flex items-center justify-center text-rose-700"
+            >
+              ...
+            </span>
+          ) : (
+            <Link
+              key={pageNum}
+              href={`/?page=${pageNum}&limit=${limit}`}
+              aria-current={currentPage === pageNum ? "page" : undefined}
+              className={`
+                min-w-10 h-10 flex items-center justify-center rounded-full
+                font-medium transition-all duration-300
+                ${
+                  currentPage === pageNum
+                    ? "bg-rose-400 text-white shadow-[0_4px_20px_rgba(251,113,133,0.4)] scale-110"
+                    : "bg-rose-200 text-rose-700 hover:bg-rose-300 hover:text-rose-800 hover:shadow-md"
+                }
+              `}
+            >
+              {pageNum}
+            </Link>
+          )
+        )}
+
+        {/* Next */}
+        <Button
+          type="button"
+          disabled={isLastPage || isOnlyOnePage}
+          onClick={() =>
+            router.push(`/?page=${currentPage + 1}&limit=${limit}`)
+          }
+          className={`
+            min-w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
+            font-medium transition-all duration-300
+            ${
+              isLastPage || isOnlyOnePage
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-white text-rose-700 hover:bg-rose-200 hover:text-rose-800 hover:shadow-md border-2 border-rose-200"
+            }
+          `}
+          aria-label="Next page"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </Button>
+      </div>
+
+      {/* Page size + range */}
+      <div className="flex items-center gap-3">
+        <label className="text-sm text-rose-600 font-medium">
+          Page Size:
+        </label>
+        <Listbox value={limit} onChange={handleLimitChange}>
+          {({ open }) => (
+            <>
+              <ListboxButton
+                className="relative w-16 px-4 py-2 flex items-center justify-between rounded-full
+                cursor-pointer text-sm font-medium bg-rose-100 text-rose-700
+                hover:bg-rose-200 focus:outline-none focus:ring-2 focus:ring-rose-400
+                transition-all duration-300"
+              >
+                <span>{limit}</span>
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    open ? "rotate-180" : ""
+                  }`}
+                />
+              </ListboxButton>
+
+              <ListboxOptions
+                modal={false}
+                anchor="bottom"
+                className="mt-2 w-16 rounded-2xl bg-white shadow-lg
+                border-2 border-rose-200 py-1 focus:outline-none [--anchor-gap:8px]"
+              >
+                {["3", "5", "10", "15", "20"].map((option) => (
+                  <ListboxOption
+                    key={option}
+                    value={option}
+                    className="cursor-pointer px-4 py-2 text-sm font-medium
+                    flex items-center justify-center transition-colors
+                    data-focus:bg-rose-100 data-selected:text-rose-700 text-gray-700"
+                  >
+                    {option}
+                  </ListboxOption>
+                ))}
+              </ListboxOptions>
+            </>
+          )}
+        </Listbox>
+
+        <div className="text-sm text-rose-600 font-medium">
+          {startItem}-{endItem} of {total}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Pagination;
