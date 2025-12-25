@@ -31,13 +31,13 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
   const isOnlyOnePage = totalPages === 1;
 
   const handleLimitChange = (newLimit: string) => {
-    router.push(`/?page=1&limit=${newLimit}`);
+    router.push(`/?page=1&limit=${newLimit}`, { scroll: false });
   };
 
   // Generate page numbers (with ellipsis)
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
     const maxPages = isMobile ? 3 : 7; // Mobile: 3 pages, Desktop: 7 pages
 
     if (totalPages <= maxPages) {
@@ -94,7 +94,9 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
           type="button"
           disabled={isFirstPage || isOnlyOnePage}
           onClick={() =>
-            router.push(`/?page=${currentPage - 1}&limit=${limit}`)
+            router.push(`/?page=${currentPage - 1}&limit=${limit}`, {
+              scroll: false,
+            })
           }
           className={`
             min-w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
@@ -123,6 +125,7 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
             <Link
               key={`page-${i}-${pageNum}`}
               href={`/?page=${pageNum}&limit=${limit}`}
+              scroll={false}
               aria-current={currentPage === pageNum ? "page" : undefined}
               className={`
                 min-w-10 h-10 flex items-center justify-center rounded-full
@@ -144,7 +147,9 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
           type="button"
           disabled={isLastPage || isOnlyOnePage}
           onClick={() =>
-            router.push(`/?page=${currentPage + 1}&limit=${limit}`)
+            router.push(`/?page=${currentPage + 1}&limit=${limit}`, {
+              scroll: false,
+            })
           }
           className={`
             min-w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
@@ -163,9 +168,7 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
 
       {/* Page size + range */}
       <div className="flex items-center gap-3">
-        <label className="text-sm text-rose-600 font-medium">
-          Page Size:
-        </label>
+        <label className="text-sm text-rose-600 font-medium">Page Size:</label>
         <Listbox value={limit} onChange={handleLimitChange}>
           {({ open }) => (
             <>
