@@ -179,7 +179,7 @@ const CommentEditor = ({
         </Field>
         {/* Image Preview */}
         <div className="flex justify-center items-center">
-          <div className="w-full max-h-65 sm:max-h-100 border-2 border-dashed border-gray-300 rounded-lg overflow-y-auto bg-gray-50">
+          <div className="w-full max-h-75 sm:max-h-100 border-2 border-dashed border-gray-300 rounded-lg overflow-y-auto bg-gray-50">
             {imagePreview && imageDimensions ? (
               <div className="w-full">
                 <Image
