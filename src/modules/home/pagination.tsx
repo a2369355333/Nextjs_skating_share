@@ -23,8 +23,12 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
   const currentPage = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
 
+  // Add validation to ensure values are valid
   const startItem = (currentPage - 1) * limitNum + 1;
   const endItem = Math.min(currentPage * limitNum, total);
+
+  // Check if values are valid
+  const isValidData = !isNaN(startItem) && !isNaN(endItem) && total > 0;
 
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === totalPages;
@@ -38,13 +42,12 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const maxPages = isMobile ? 3 : 7; // Mobile: 3 pages, Desktop: 7 pages
+    const maxPages = isMobile ? 3 : 7;
 
     if (totalPages <= maxPages) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (isMobile) {
-        // Mobile logic: 1 ... X ... N
         if (currentPage <= 2) {
           pages.push(1, 2, 3, "...", totalPages);
         } else if (currentPage >= totalPages - 1) {
@@ -53,7 +56,6 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
           pages.push(1, "...", currentPage, "...", totalPages);
         }
       } else {
-        // Desktop logic (original)
         if (currentPage <= 4) {
           pages.push(1, 2, 3, 4, 5, "...", totalPages);
         } else if (currentPage > totalPages - 4) {
@@ -104,7 +106,11 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
             ${
               isFirstPage || isOnlyOnePage
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-white text-rose-700 hover:bg-rose-200 hover:text-rose-800 hover:shadow-md border-2 border-rose-200"
+                : `
+                  bg-white text-rose-700 border-2 border-rose-200
+                  hover:bg-rose-200 hover:text-rose-800 hover:shadow-md
+                  active:bg-rose-300 active:shadow-inner
+                `
             }
           `}
           aria-label="Previous page"
@@ -133,7 +139,11 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
                 ${
                   currentPage === pageNum
                     ? "bg-rose-400 text-white shadow-[0_4px_20px_rgba(251,113,133,0.4)] scale-110"
-                    : "bg-rose-200 text-rose-700 hover:bg-rose-300 hover:text-rose-800 hover:shadow-md"
+                    : `
+                      bg-rose-200 text-rose-700
+                      hover:bg-rose-300 hover:text-rose-800 hover:shadow-md
+                      active:bg-rose-400 active:text-white
+                    `
                 }
               `}
             >
@@ -157,7 +167,11 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
             ${
               isLastPage || isOnlyOnePage
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-white text-rose-700 hover:bg-rose-200 hover:text-rose-800 hover:shadow-md border-2 border-rose-200"
+                : `
+                  bg-white text-rose-700 border-2 border-rose-200
+                  hover:bg-rose-200 hover:text-rose-800 hover:shadow-md
+                  active:bg-rose-300 active:shadow-inner
+                `
             }
           `}
           aria-label="Next page"
@@ -165,9 +179,8 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
-
       {/* Page size + range */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <label className="text-sm text-rose-600 font-medium">Page Size:</label>
         <Listbox value={limit} onChange={handleLimitChange}>
           {({ open }) => (
@@ -209,9 +222,26 @@ const Pagination = ({ totalPages, total }: PaginationProps) => {
             </>
           )}
         </Listbox>
-
-        <div className="text-sm text-rose-600 font-medium">
-          {startItem}-{endItem} of {total}
+        {/* Range display with fixed width to prevent layout shift */}
+        <div className="text-sm text-rose-600 font-medium text-right">
+          {isValidData ? (
+            `${startItem}-${endItem} of ${total}`
+          ) : (
+            <div className="flex items-center justify-end gap-1">
+              <div
+                className="w-2 h-2 bg-rose-300 rounded-full animate-pulse"
+                style={{ animationDelay: "0ms", animationDuration: "1000ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-rose-400 rounded-full animate-pulse"
+                style={{ animationDelay: "150ms", animationDuration: "1000ms" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-rose-500 rounded-full animate-pulse"
+                style={{ animationDelay: "300ms", animationDuration: "1000ms" }}
+              ></div>
+            </div>
+          )}
         </div>
       </div>
     </div>

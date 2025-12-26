@@ -140,7 +140,6 @@ const CommentEditor = ({
                   width={imageDimensions.width}
                   height={imageDimensions.height}
                   style={{ width: '100%', height: 'auto' }}
-                  unoptimized
                 />
               </div>
             ) : (

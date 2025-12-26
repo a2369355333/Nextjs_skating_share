@@ -18,11 +18,12 @@ const CommentBtn = () => {
           hover:from-pink-500 hover:to-rose-500 transition-all duration-300 
           shadow-[0_8px_30px_rgba(251,113,133,0.4)] 
           hover:shadow-[0_12px_40px_rgba(251,113,133,0.6)] hover:scale-105
+          active:shadow-[0_4px_20px_rgba(251,113,133,0.5)]
         `}
       >
-        <PenLine className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300" />
+        <PenLine className="w-6 h-6 group-hover:rotate-12 group-active:rotate-45 transition-transform duration-300" />
         <span>Share a Memorable Story</span>
-        <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin" />
+        <Sparkles className="w-5 h-5 animate-pulse group-hover:animate-spin group-active:scale-125" />
       </Button>
       <CommentEditor
         isDialogOpen={isDialogOpen}
