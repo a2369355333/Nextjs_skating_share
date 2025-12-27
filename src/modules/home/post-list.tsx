@@ -29,7 +29,7 @@ const PostList = () => {
         </div>
       )}
       
-      {!isLoading && posts.length === 0 && (
+      {!isLoading && !error && data && posts.length === 0 && (
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <p className="text-rose-400 text-lg font-medium">No posts yet</p>
@@ -38,7 +38,7 @@ const PostList = () => {
         </div>
       )}
       
-      {!isLoading &&
+      {!isLoading && posts.length > 0 &&
         posts.map((post: Post) => (
           <Link key={post.id} href={`/post/${post.id}`}>
             <Post post={post} />
