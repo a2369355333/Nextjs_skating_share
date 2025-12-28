@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 const useQueryPostList = () => {
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || "1";
-  const limit = searchParams.get("limit") || "5";
+  const limit = searchParams.get("limit") || "3";
 
   return useQuery({
     queryKey: ["posts", page, limit],

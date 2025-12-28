@@ -7,7 +7,7 @@ import { NextRequest } from "next/server";
 export const GET = withApiHandler(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get("page") || "1");
-  const limit = Number(searchParams.get("limit") || "5");
+  const limit = Number(searchParams.get("limit") || "3");
   const skip = (page - 1) * limit;
 
   const client = await clientPromise;
