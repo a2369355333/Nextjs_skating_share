@@ -33,3 +33,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 Project URL: [https://nextjs-ski-share.vercel.app/](https://nextjs-ski-share.vercel.app/)
 
+## Demo
+<img width="368" height="691" alt="image" src="https://github.com/user-attachments/assets/2dd6ea7b-7d32-4e54-9b73-de8745b7c2b3" />
+
+
